@@ -51,20 +51,24 @@ lambda_mu <- mci_mu(lambda_out$X_sample,T,dim)
 pgmet_mu <- mci_mu(pgmet_out$X_sample,T,dim)
 combined_mu <- mci_mu(combined_out$X_sample,T,dim)
 
+cex.main <- 1.5
+cex.axis <- 2
+cex.lab <- 2
+
 library(RColorBrewer)
 colors <- c('black',brewer.pal(3,"Dark2"))
 for(j in 1:dim){
   filename <- paste("./plots/poisson3_mu_dim",j,'.pdf',sep='')
-  pdf(file=filename,width=11,height=8.5)
-  title <- paste('Smoothing mean of dimension ',j,sep='')
-  plot(ssm_poisson$X[,j],type='l',col=colors[1],ylim=c(-8,12),main=title,ylab='',xlab='Time',
-       cex.main=1.5,cex.axis=1,cex.lab=1.2
+  pdf(file=filename,width=24,height=8)
+  # title <- paste('Smoothing mean of dimension ',j,sep='')
+  plot(ssm_poisson$X[,j],type='l',col=colors[1],ylim=c(-8,12),ylab='',xlab='Time',
+       cex.main=cex.main,cex.axis=cex.axis,cex.lab=cex.lab #,main=title
        )
   lines(lambda_mu[,j],col=colors[2])
   lines(pgmet_mu[,j],col=colors[3])
   lines(combined_mu[,j],col=colors[4])
-  legend(300,12,legend=c("True value","Lambda Sampler","PGBS+Metropolis Sampler","Combined Sampler"),
-         cex=1,lty=1,col=colors)
+  legend(350,12,legend=c("True value","Lambda Sampler","PGMET Sampler","Combined Sampler"),
+         cex=2,lty=1,col=colors)
   dev.off()
 }
 
