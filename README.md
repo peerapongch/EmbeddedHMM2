@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# EmbeddedHMM2
-=======
 # EmbeddedHMM2
 
 This repository contains the code relevant to my master's project on inference in high-dimensional non-linear non-Gaussian state space models. This project is co-supervised by Alexander Shestopaloff and Arnaud Doucet.
@@ -32,4 +29,3 @@ Futhermore, different proposals for parameter sampling via Metropolis are also i
 
 ## Main reference 
 A.Y. Shestopaloff and R. M. Neal (2017). Sampling latent states for high-dimensional nonlinear state space models with the embedded HMM method. Bayesian Analysis.
->>>>>>> 9f3cb457bd38c0e03fd14278c91505ed298235cb
