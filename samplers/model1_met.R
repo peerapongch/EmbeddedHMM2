@@ -35,6 +35,7 @@ metModel1 <- function(ssm,N,es,init=NULL,thin.factor=10,seed=NULL){
   }
   X_current <- X_sample[1,,]
   pb <- txtProgressBar(min=0,max=N,title="MH-MCMC",style=3)
+  acceptance_rate <- numeric(T)
   for(i in 2:N){
     # print(paste('progress: ',i/N*100,'%',sep=''))
     setTxtProgressBar(pb, i)
@@ -66,6 +67,7 @@ metModel1 <- function(ssm,N,es,init=NULL,thin.factor=10,seed=NULL){
       alpha <- min(1,hastings)
       if(alpha>U[j]){
         X_current[j,] <- x_j
+        acceptance_rate[j] <- acceptance_rate[j] + 1
       } #else unchanged
     }
     
@@ -74,6 +76,7 @@ metModel1 <- function(ssm,N,es,init=NULL,thin.factor=10,seed=NULL){
     }
   }
   close(pb)
-  return(list(X_sample=X_sample,N=N,thin.factor=thin.factor,es=es,init=init,seed=seed))
+  acceptance_rate <- acceptance_rate/(N-1)
+  return(list(X_sample=X_sample,N=N,thin.factor=thin.factor,es=es,init=init,seed=seed,acceptance_rate=acceptance_rate))
 }
 

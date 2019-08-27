@@ -7,7 +7,7 @@ seeds <- 1:5
 
 ######### Metropolis #########
 source('../../samplers/model1_met.R')
-N <- 2000000
+N <- 3000000
 es <- c(0.2,0.8)
 for(s in seeds){
   seed <- s
@@ -21,7 +21,7 @@ for(s in seeds){
 
 ######### PGBS #########
 source('../../samplers/model1_pgbs.R')
-N <- 70000
+N <- 40000
 L <- 250
 for(s in seeds){
   seed <- s
@@ -35,7 +35,7 @@ for(s in seeds){
 
 ######### PGBS+Metropolis #########
 source('../../samplers/model1_pgmet.R')
-N <- 70000
+N <- 30000
 L <- 250
 es <- c(0.2,0.8)
 for(s in seeds){
@@ -50,7 +50,7 @@ for(s in seeds){
 
 ######### Lambda #########
 source('../../samplers/model1_lambda.R')
-N <- 9000
+N <- 14000
 L <- 50
 for(s in seeds){
   seed <- s
@@ -66,7 +66,7 @@ for(s in seeds){
 source('../../samplers/model1_gamma.R')
 N <- 20000
 L <- 50
-elim <- c(0,0.1)
+elim <- c(0,0.2)
 for(s in seeds){
   seed <- s
   filename <- paste('./data/poisson2_gamma_seed',seed,'.RData',sep='')

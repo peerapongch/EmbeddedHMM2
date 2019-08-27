@@ -58,6 +58,7 @@ mcmc_step<- function(X_current,Y,N,es,T,dim,mus,sigmas_L,delta,thin.factor=10,se
   if(!is.null(seed)){
     set.seed(seed)
   }
+  acceptance_rate <- numeric(T)
   for(i in 2:N){
     U <- runif(T)
     for(j in 1:T){
@@ -87,6 +88,7 @@ mcmc_step<- function(X_current,Y,N,es,T,dim,mus,sigmas_L,delta,thin.factor=10,se
       alpha <- min(1,hastings)
       if(alpha>U[j]){
         X_current[j,] <- x_j
+        acceptance_rate[j] <- acceptance_rate[j] + 1
       } #else unchanged
     }
     
@@ -94,7 +96,7 @@ mcmc_step<- function(X_current,Y,N,es,T,dim,mus,sigmas_L,delta,thin.factor=10,se
       X_sample[i/thin.factor,,] <- X_current
     }
   }
-  return(X_current) # return only the last sample
+  return(list(X_new=X_current,acceptance_rate=acceptance_rate/(N-1))) # return only the last sample
   # return(list(X_sample=X_sample,N=N,thin.factor=thin.factor,es=es,init=init))
 }
 
@@ -155,6 +157,7 @@ pgmetModel2 <- function(ssm,N,L,es,N.mcmc=10,init=NULL,seed=NULL,return.weight=F
   X_current <- X_sample[1,,]
   
   pb <- txtProgressBar(min=0,max=N*4,title="pgbs",style=3)
+  met_acceptance_rate <-numeric(T)
   for(n in seq(2,4*N,4)){
     ### Step1: pgbs with forward sequence ###
     forward_results <- forward_step(X_current,Y,T,L,dim,F,sigma_U,mu_init,sigma_init,delta)
@@ -166,7 +169,9 @@ pgmetModel2 <- function(ssm,N,L,es,N.mcmc=10,init=NULL,seed=NULL,return.weight=F
     rm(forward_results)
     
     ### Step2: mcmc 10 steps ###
-    X_sample[n+1,,] <- mcmc_step(X_sample[n,,],Y,N.mcmc,es,T,dim,mus,sigmas_L,delta,thin.factor=1)
+    mcmc_out <- mcmc_step(X_sample[n,,],Y,N.mcmc,es,T,dim,mus,sigmas_L,delta,thin.factor=1)
+    X_sample[n+1,,] <- mcmc_out$X_new
+    met_acceptance_rate <- rbind(met_acceptance_rate,mcmc_out$acceptance_rate)
     
     ### Step3: pgbs reversed sequence ###
     forward_results <- forward_step(X_sample[n+1,seq(T,1,-1),],Y[seq(T,1,-1),],T,L,dim,F,sigma_U,mu_init,sigma_init,delta)
@@ -178,8 +183,9 @@ pgmetModel2 <- function(ssm,N,L,es,N.mcmc=10,init=NULL,seed=NULL,return.weight=F
     rm(forward_results)
 
     ### Step4: mcmc 10 steps ###
-    X_sample[n+3,,] <- mcmc_step(X_sample[n+2,,],Y,N.mcmc,es,T,dim,mus,sigmas_L,delta,thin.factor=1)
-    
+    mcmc_out <- mcmc_step(X_sample[n+2,,],Y,N.mcmc,es,T,dim,mus,sigmas_L,delta,thin.factor=1)
+    X_sample[n+3,,] <- mcmc_out$X_new
+    met_acceptance_rate <- rbind(met_acceptance_rate,mcmc_out$acceptance_rate)
     ### update current and terminate ###
     X_current <- X_sample[n+3,,] # forward sequence, updated once for next iteration only
     setTxtProgressBar(pb, n)
@@ -187,7 +193,7 @@ pgmetModel2 <- function(ssm,N,L,es,N.mcmc=10,init=NULL,seed=NULL,return.weight=F
   setTxtProgressBar(pb, 4*N)
   close(pb)
   if(return.weight){
-    return(list(X_sample = X_sample[-1,,],N=N,init=init,W=W,lW=lW,seed=seed))
+    return(list(X_sample = X_sample[-1,,],N=N,init=init,W=W,lW=lW,seed=seed,met_acceptance_rate=met_acceptance_rate[-1,]))
   }
-  return(list(X_sample = X_sample[-1,,],N=N,init=init,seed=seed))
+  return(list(X_sample = X_sample[-1,,],N=N,init=init,seed=seed,met_acceptance_rate=met_acceptance_rate[-1]))
 }

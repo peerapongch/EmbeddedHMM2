@@ -22,7 +22,7 @@ save(lambda_out,file=filename)
 
 #### Random walk proposal with shift and scale update (RWSHSC1) #####
 source('../../samplers/model1_lambda_param_RW_SHSC.R')
-N <- 9000
+N <- 8000
 L <- 80
 N.mcmc.param <- 40
 seed <- 1 
@@ -41,7 +41,7 @@ save(lambda_out,file=filename)
 
 #### Random walk proposal with shift and scale update without random walk update of sigma and c(RWSHSC2) #####
 source('../../samplers/model1_lambda_param_RW_SHSC_2.R')
-N <- 9000
+N <- 8000
 L <- 80
 N.mcmc.param <- 40
 seed <- 1 

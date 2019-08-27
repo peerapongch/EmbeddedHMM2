@@ -31,27 +31,30 @@ gamma_mu_avg <- matrix(logical(0),nrow=T,ncol=dim)
 for(t in 1:T){
   gamma_mu_avg[t,] <- colSums(gamma_mu[,t,])/dim(gamma_mu[,t,])[1]
 }
-cex.main <- 1.2
-cex.axis <- 1
-cex.lab <- 1.2
+par(mar=c(5.1, 6.1, 4.1, 2.1))
+cex.axis <- 2
+cex.main <- 2
+cex.lab <- 2
+pch <- 16
+cex <- 0.8
 colors <- c('black',brewer.pal(5,"Dark2"))
 for(j in 1:dim){
-  # jpeg(paste('poisson2_mu_x',j,'.jpg',sep=''),width = 750,height=550,quality=100)
-  filename <- paste("./plots/poisson2_mu_dim",j,".pdf")
+  filename <- paste("./plots/poisson2_mu_dim",j,".pdf",sep='')
   pdf(file=filename,width=11,height=8.5)
-  name <- paste('Smoothing mean of dimension ',j,sep='')
-  plot(ssm_poisson$X[,j],type='l',main=name,ylim=c(-7,12),ylab='',xlab='Time',
-       cex.main=1.5,cex.axis=1,cex.lab=1.2
+  # name <- paste('Smoothing mean of dimension ',j,sep='')
+  plot(ssm_poisson$X[,j],type='l', #main=name,
+       ylim=c(-7,14),ylab='',xlab='Time',
+       cex.main=cex.main,cex.axis=cex.axis,cex.lab=cex.lab
        )
   lines(met_mu_avg[,j],col=colors[2])
   lines(pgbs_mu_avg[,j],col=colors[3])
   lines(pgmet_mu_avg[,j],col=colors[4])
   lines(lambda_mu_avg[,j],col=colors[5])
   lines(gamma_mu_avg[,j],col=colors[6])
-  legend(0,12,legend = c("True latent state","Metropolis Sampler (200,000 samples)","PGBS Sampler (140,000 samples)",
-                         "PGBS+Metropolis Sampler (280,000 samples)","Lambda Sampler (18,000 samples)",
-                         "Gamma Sampler (40,000 samples)"),
-         col=colors,cex=1.1,pt.cex=1,lty=1)
+  legend(0,14,legend = c("True latent state","Metropolis Sampler","PGBS Sampler",
+                         "PGMET Sampler","Lambda Sampler",
+                         "Gamma Sampler"),
+         col=colors,cex=1.6,lty=1)
   dev.off()
 }
 

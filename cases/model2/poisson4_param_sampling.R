@@ -24,7 +24,7 @@ save(lambda_out,file=filename)
 
 #### Random walk metropolis with scale update (RWSC1) #####
 source('../../samplers/model2_lambda_param_RW_SC.R')
-N <- 9000
+N <- 8000
 L <- 80
 N.mcmc.param <- 40
 seed <- 1 
@@ -44,7 +44,7 @@ save(lambda_out,file=filename)
 
 #### Random walk metropolis with scale update (RWSC2) with RW update of sigma #####
 source('../../samplers/model2_lambda_param_RW_SC_2.R')
-N <- 9000
+N <- 8000
 L <- 80
 N.mcmc.param <- 40
 seed <- 1 

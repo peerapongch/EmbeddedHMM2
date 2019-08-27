@@ -10,14 +10,15 @@ es <- c(0.3,1)
 L <- 5000
 N.mcmc <- 50
 seed <- 1
+init <- matrix(1,nrow=T,ncol=dim)
 system.time(
-  pgmet_out <- pgmetModel2(ssm_poisson,N,L,es,N.mcmc=N.mcmc,seed=seed)
+  pgmet_out <- pgmetModel2(ssm_poisson,N,L,es,N.mcmc=N.mcmc,seed=seed,init=init)
 )
 save(pgmet_out,file='./data/poisson4_pgmet.RData')
 
 ########## Lambda ##########
 source('../../samplers/model2_lambda.R')
-N <- 36000
+N <- 25000
 L <- 80
 init <- matrix(1,nrow=T,ncol=dim)
 system.time(

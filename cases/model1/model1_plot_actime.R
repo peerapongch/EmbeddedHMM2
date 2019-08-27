@@ -9,7 +9,7 @@ load('./data/poisson2_pgmet_uactime.RData')
 load('./data/poisson2_lambda_uactime.RData')
 load('./data/poisson2_gamma_uactime.RData')
 ylim_min <- 0
-ylim_max <- 36
+ylim_max <- 12.5
 
 cex.main <- 1.5
 cex.axis <- 2
@@ -23,6 +23,7 @@ plot(met_uactime$ac_time[,1]*tps,type='l',col=colors[1],xlab='Time',cex.main=cex
 for(j in 2:dim){
   lines(met_uactime$ac_time[,j]*tps,col=colors[j])
 }
+abline(h=1,lty=2)
 dev.off()
 
 # title <- 'PGBS Sampler Adjusted Autocorrelation Time (0.19 s per sample)'
@@ -33,6 +34,7 @@ plot(pgbs_uactime$ac_time[,1]*tps,type='l',col=colors[1],xlab='Time',cex.main=ce
 for(j in 2:dim){
   lines(pgbs_uactime$ac_time[,j]*tps,col=colors[j])
 }
+abline(h=1,lty=2)
 dev.off()
 
 
@@ -44,6 +46,7 @@ plot(pgmet_uactime$ac_time[,1]*tps,type='l',col=colors[1],xlab='Time',cex.main=c
 for(j in 2:dim){
   lines(pgmet_uactime$ac_time[,j]*tps,col=colors[j])
 }
+abline(h=1,lty=2)
 dev.off()
 
 # title <- 'Lambda Sampler Adjusted Autocorrelation Time (0.54 s per sample)'
@@ -54,9 +57,12 @@ plot(lambda_uactime$ac_time[,1]*tps,type='l',col=colors[1],xlab='Time',cex.main=
 for(j in 2:dim){
   lines(lambda_uactime$ac_time[,j]*tps,col=colors[j])
 }
+abline(h=1,lty=2)
 dev.off()
 
 # title <- 'Gamma Sampler Adjusted Autocorrelation Time (0.39 s per sample)'
+ylim_min <- 0
+ylim_max <- 36
 tps <- 0.39
 pdf(file="./plots/gamma_actime.pdf",width=11,height=8.5)
 plot(gamma_uactime$ac_time[,1]*tps,type='l',col=colors[1],xlab='Time',cex.main=cex.main,cex.axis=cex.axis,cex.lab=cex.lab,
@@ -64,5 +70,6 @@ plot(gamma_uactime$ac_time[,1]*tps,type='l',col=colors[1],xlab='Time',cex.main=c
 for(j in 2:dim){
   lines(gamma_uactime$ac_time[,j]*tps,col=colors[j])
 }
+abline(h=1,lty=2)
 dev.off()
 

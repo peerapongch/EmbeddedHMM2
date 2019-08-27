@@ -76,6 +76,7 @@ pgbsModel1 <- function(ssm,N,L,init=NULL,seed=NULL,return.weight=FALSE){
   X_current <- X_sample[1,,]
   
   pb <- txtProgressBar(min=0,max=N*2,title="pgbs",style=3)
+  acceptance_rate <- 0
   for(n in seq(2,2*N,2)){
     ### forward sequence ###
     forward_results <- forward_step(X_current,Y,T,L,dim,F,sigma_U,mu_init,sigma_init,c,delta)
@@ -83,7 +84,11 @@ pgbsModel1 <- function(ssm,N,L,init=NULL,seed=NULL,return.weight=FALSE){
       W[n-1,,] <- forward_results$W
       lW[n-1,,] <- forward_results$lW
     }
-    X_current <- backward_step(forward_results,T,L,F,sigma_inv)
+    backward_out <- backward_step(forward_results,T,L,F,sigma_inv)
+    if(any(backward_out != X_current)){
+      X_current <- backward_out
+      acceptance_rate <- acceptance_rate + 1
+    }
     # save 
     X_sample[n,,] <- X_current
     
@@ -93,15 +98,20 @@ pgbsModel1 <- function(ssm,N,L,init=NULL,seed=NULL,return.weight=FALSE){
       W[n,seq(T,1,-1),] <- forward_results$W
       lW[n,seq(T,1,-1),] <- forward_results$lW
     }
-    X_current[seq(T,1,-1),] <- backward_step(forward_results,T,L,F,sigma_inv)
+    backward_out <- backward_step(forward_results,T,L,F,sigma_inv)
+    if(any(backward_out[seq(T,1,-1),] != X_current)){
+      X_current <- backward_out[seq(T,1,-1),]
+      acceptance_rate <- acceptance_rate + 1
+    }
     # save
     X_sample[n+1,,] <- X_current
     
     setTxtProgressBar(pb, n)
   }
   close(pb)
+  acceptance_rate <- acceptance_rate/(2*N)
   if(return.weight){
-    return(list(X_sample = X_sample[-1,,],N=N,init=init,W=W,lW=lW,seed=seed))
+    return(list(X_sample = X_sample[-1,,],N=N,init=init,W=W,lW=lW,seed=seed,acceptance_rate=acceptance_rate))
   }
-  return(list(X_sample = X_sample[-1,,],N=N,init=init,seed=seed))
+  return(list(X_sample = X_sample[-1,,],N=N,init=init,seed=seed,acceptance_rate=acceptance_rate))
 }

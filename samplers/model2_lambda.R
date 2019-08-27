@@ -291,5 +291,5 @@ lambdaModel2 <- function(ssm,N,L,init=NULL,seed=NULL){
     setTxtProgressBar(pb, i)
   }
   return(list(X_sample=X_sample[-1,,],N=N,L=L,init=init,seed=seed,X_pool=X_pool,
-              acceptance_rate=acceptance_rate))
+              acceptance_rate=acceptance_rate*2))
 }
